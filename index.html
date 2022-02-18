@@ -104,6 +104,8 @@
             <div class="buttons">
                 <button class="button btn_play"> &gt; </button>
                 <button class="button btn_pause"> ||</button>
+                <button class="button btn_next"> 向前 </button>
+                <button class="button btn_previous"> 向后 </button>
                 <select name="speed">
                     <option value="1000">播放速度</option>
                     <option value="1333">0.75倍速</option>
@@ -426,6 +428,58 @@
                     obj.sysMsg("播放完毕");
                 }
             };
+            obj.next = function(){
+                if(typeof(obj.record[obj.pointer]) == 'undefined')
+                {
+                    return false;
+                }
+                if(!obj.renderRow(obj.record[obj.pointer]))
+                {
+                    obj.sysMsg("播放失败");
+                    return false;
+                }
+
+                obj.pointer ++;
+                //计算progress
+                let progress_percent = 0;
+                if(obj.pointer % 5 == 0 && obj.record.length > 0)
+                {
+                    progress_percent = parseInt(obj.pointer * 100 / obj.record.length );
+                    $("#progress>div").css("width", progress_percent + '%');
+                    if (obj._progress != -1 && progress_percent >= obj._progress){
+                        obj._progress = -1;
+                        //obj.pause();
+                    }
+                }
+            };
+            obj.previous = function(){
+                if(obj.pointer < 0)
+                {
+                    return false;
+                }
+                if(typeof(obj.record[obj.pointer]) == 'undefined')
+                {
+                    return false;
+                }
+                if(!obj.renderRow(obj.record[obj.pointer]))
+                {
+                    obj.sysMsg("播放失败");
+                    return false;
+                }
+
+                obj.pointer --;
+                //计算progress
+                let progress_percent = 0;
+                if(obj.pointer % 5 == 0 && obj.record.length > 0)
+                {
+                    progress_percent = parseInt(obj.pointer * 100 / obj.record.length );
+                    $("#progress>div").css("width", progress_percent + '%');
+                    if (obj._progress != -1 && progress_percent >= obj._progress){
+                        obj._progress = -1;
+                        //obj.pause();
+                    }
+                }
+            };
             obj.pause = function(){
                 if(obj.timer)
                 {
@@ -654,6 +708,20 @@
                 {
                     record_player.pause();
                 }
+            });
+            $(".btn_next").click(function(){
+                if(record_player.status == 1)
+                {
+                    record_player.pause();
+                }
+                record_player.next();
+            });
+            $(".btn_previous").click(function(){
+                if(record_player.status == 1)
+                {
+                    record_player.pause();
+                }
+                record_player.previous();
             });
         });
 
