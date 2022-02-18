@@ -461,11 +461,7 @@
                 {
                     return false;
                 }
-                if(!obj.renderRow(obj.record[obj.pointer]))
-                {
-                    obj.sysMsg("播放失败");
-                    return false;
-                }
+                obj.removeRow();
 
                 obj.pointer --;
                 //计算progress
@@ -517,17 +513,13 @@
                 {
                     //console.log(row);
                 }
-                if($("#chat_content").find("li").length > 150)
-                {
-                    for(let i = 1; i <= 100; i ++)
-                    {
-                        $("#chat_content").find("li:first").remove();
-                    }
-                }
+
                 $("#chat_content_list").scrollTop($("#chat_content_list")[0].scrollHeight - $("#chat_content_list").height());
                 return $return;
             };
-
+            obj.removeRow = function(){
+                $("#chat_content").find("li:last").remove();
+            };
             /**
              * 以下是各种事件的处理方法。
              */
